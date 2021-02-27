@@ -1,5 +1,6 @@
 import time
 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
 
@@ -15,10 +16,18 @@ class AuthGmail:
         self.browser.get(self.URL)
 
     def auth(self):
-        email_elem = self.browser.find_element_by_xpath(
-            '//input[@type="email"]')
-        email_elem.send_keys(self.email, Keys.ENTER)
-        time.sleep(2)
-        password_elem = self.browser.find_element_by_xpath(
-            '//input[@type="password"]')
-        password_elem.send_keys(self.password, Keys.ENTER)
+        try:
+            self.browser.find_element_by_xpath(
+                '//input[@type="email"]'
+            ).send_keys(
+                self.email, Keys.ENTER
+            )
+            time.sleep(1)
+            self.browser.find_element_by_xpath(
+                '//input[@type="password"]'
+            ).send_keys(
+                self.password, Keys.ENTER
+            )
+        except NoSuchElementException:
+            print('Поле email или password не найдено.')
+

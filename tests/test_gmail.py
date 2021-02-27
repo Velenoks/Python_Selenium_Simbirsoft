@@ -1,10 +1,17 @@
 import time
 import pytest
-
 from selenium.webdriver import Chrome
 
 from pages.auth import AuthGmail
+from pages.find_messages import SearchGmail
 from pages.send_email import SendEmailGmail
+
+
+EMAIL = 'pavel.zakharov.test'
+PASSWORD = 'pav123456zak'
+TO_EMAIL = 'pavel.zakharov.1994@yandex.ru'
+TOPIC = 'Тестовое задание. Захаров.'
+'Всего было найдено'
 
 
 @pytest.fixture
@@ -15,13 +22,15 @@ def browser():
     driver.quit()
 
 
-def test_basic_duckduckgo_search(browser):
-    email = 'pavel.zakharov.test'
-    password = 'pav123456zak'
-    auth_page = AuthGmail(browser, email, password)
+def test_gmail(browser):
+    auth_page = AuthGmail(browser, EMAIL, PASSWORD)
     auth_page.load()
-    time.sleep(2)
+    time.sleep(1)
     auth_page.auth()
     time.sleep(3)
-    send_email_page = SendEmailGmail(browser)
-    send_email_page.send_email()
+    assert EMAIL in browser.title, 'Авторизация не выполнена.'
+    find_email = SearchGmail(browser, TO_EMAIL)
+    unit = find_email.search_email()
+    time.sleep(2)
+    send_email_page = SendEmailGmail(browser, TO_EMAIL, TOPIC, unit)
+    text = send_email_page.send_email()
