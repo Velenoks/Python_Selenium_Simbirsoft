@@ -1,24 +1,24 @@
 import time
-from selenium.webdriver.common.by import By
+
+from selenium.webdriver.common.keys import Keys
 
 
 class AuthGmail:
     URL = 'https://gmail.com'
-    SEARCH_INPUT = (By.ID, 'search_form_input_homepage')
 
-    def __init__(self, browser):
+    def __init__(self, browser, email, password):
         self.browser = browser
+        self.email = email
+        self.password = password
 
     def load(self):
         self.browser.get(self.URL)
 
     def auth(self):
-        email_elem = self.browser.find_element_by_id('Email')
-        email_elem.send_keys('pavel.zakharov.test')
-        next_button = self.browser.find_element_by_id('next')
-        next_button.click()
+        email_elem = self.browser.find_element_by_xpath(
+            '//input[@type="email"]')
+        email_elem.send_keys(self.email, Keys.ENTER)
         time.sleep(2)
-        password_elem = self.browser.find_element_by_id('Passwd')
-        password_elem.send_keys('pav123456zak')
-        signin_button = self.browser.find_element_by_id('signIn')
-        signin_button.click()
+        password_elem = self.browser.find_element_by_xpath(
+            '//input[@type="password"]')
+        password_elem.send_keys(self.password, Keys.ENTER)
