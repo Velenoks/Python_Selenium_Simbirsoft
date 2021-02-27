@@ -22,7 +22,7 @@ class AuthGmail:
             ).send_keys(
                 self.email, Keys.ENTER
             )
-            time.sleep(2)
+            time.sleep(3)
             self.browser.find_element_by_xpath(
                 '//input[@type="password"]'
             ).send_keys(
