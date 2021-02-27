@@ -9,9 +9,8 @@ from pages.send_email import SendEmailGmail
 
 EMAIL = 'pavel.zakharov.test'
 PASSWORD = 'pav123456zak'
-TO_EMAIL = 'pavel.zakharov.1994@yandex.ru'
+TO_EMAIL = 'assassins1718@yandex.ru'
 TOPIC = 'Тестовое задание. Захаров.'
-'Всего было найдено'
 
 
 @pytest.fixture
@@ -25,12 +24,13 @@ def browser():
 def test_gmail(browser):
     auth_page = AuthGmail(browser, EMAIL, PASSWORD)
     auth_page.load()
-    time.sleep(1)
+    time.sleep(2)
     auth_page.auth()
-    time.sleep(3)
+    time.sleep(2)
     assert EMAIL in browser.title, 'Авторизация не выполнена.'
     find_email = SearchGmail(browser, TO_EMAIL)
     unit = find_email.search_email()
     time.sleep(2)
     send_email_page = SendEmailGmail(browser, TO_EMAIL, TOPIC, unit)
-    text = send_email_page.send_email()
+    send_email_page.send_email()
+    time.sleep(2)

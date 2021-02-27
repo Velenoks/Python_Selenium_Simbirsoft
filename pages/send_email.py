@@ -1,5 +1,3 @@
-import time
-
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
@@ -26,8 +24,6 @@ class SendEmailGmail:
         text_email = self.browser.find_element_by_css_selector(
             "div[aria-label='Тело письма']")
         text_email.send_keys(text, Keys.CONTROL, Keys.ENTER)
-        time.sleep(2)
-        return text
 
     def text_for_email(self):
         text = f'Всего было найдено {self.unit} '
@@ -40,6 +36,3 @@ class SendEmailGmail:
         elif 0 == self.unit % 10 or self.unit % 10 > 4:
             text += 'сообщений'
         return text
-
-    def check_email(self):
-        pass
