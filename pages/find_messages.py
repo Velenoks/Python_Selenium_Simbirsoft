@@ -13,10 +13,10 @@ class SearchGmail:
     def search_email(self):
         """Поиск через строку поиска и подсчет сообщений."""
         try:
-            self.browser.find_element_by_class_name(
-                'gb_ff'
+            self.browser.find_element_by_xpath(
+                '//input[@aria-label="Поиск в почте"]'
             ).send_keys(
-                'from:'+self.to, Keys.ENTER
+                'from:' + self.to, Keys.ENTER
             )
         except NoSuchElementException:
             print('Поле (Поиск в почте) не найдено.')

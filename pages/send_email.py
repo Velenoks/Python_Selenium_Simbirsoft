@@ -1,6 +1,7 @@
 import time
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 
@@ -29,7 +30,9 @@ class SendEmailGmail:
         text_email = self.browser.find_element_by_css_selector(
             'div[aria-label="Тело письма"]')
         text_email.send_keys(text, Keys.CONTROL, Keys.ENTER)
-        time.sleep(2)
+        time.sleep(1)
+        self.browser.get('https://mail.google.com/mail/u/0/#sent')
+        time.sleep(3)
 
     def text_for_email(self):
         """Выбор нужного окончания."""
