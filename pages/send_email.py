@@ -1,8 +1,11 @@
+import time
+
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
 
 class SendEmailGmail:
+    """Отправка сообщения пользователю."""
     def __init__(self, browser, to, topic, unit):
         self.browser = browser
         self.to = to
@@ -10,22 +13,26 @@ class SendEmailGmail:
         self.unit = unit
 
     def send_email(self):
+        """Заполнение полей сообщения и его отправка."""
         try:
             self.browser.find_element_by_xpath(
-                "//div[text()='Написать']"
+                '//div[text()="Написать"]'
             ).click()
         except NoSuchElementException:
             print('Кнопка (Написать) не найдена')
-        email_to = self.browser.find_element_by_name("to")
+        time.sleep(2)
+        email_to = self.browser.find_element_by_name('to')
         email_to.send_keys(self.to)
-        topic_email = self.browser.find_element_by_name("subjectbox")
+        topic_email = self.browser.find_element_by_name('subjectbox')
         topic_email.send_keys(self.topic)
         text = self.text_for_email()
         text_email = self.browser.find_element_by_css_selector(
-            "div[aria-label='Тело письма']")
+            'div[aria-label="Тело письма"]')
         text_email.send_keys(text, Keys.CONTROL, Keys.ENTER)
+        time.sleep(2)
 
     def text_for_email(self):
+        """Выбор нужного окончания."""
         text = f'Всего было найдено {self.unit} '
         if 10 < self.unit < 15:
             text += 'сообщений'
