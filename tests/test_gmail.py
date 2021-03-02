@@ -4,10 +4,9 @@ import allure
 from allure_commons.types import AttachmentType
 from dotenv import load_dotenv
 
-from pages.auth import AuthGmail
-from pages.find_messages import SearchGmail
-from pages.send_email import SendEmailGmail
-
+from pages.auth_page import AuthHelper
+from pages.find_messages_page import FindHelper
+from pages.send_email_page import SendHelper
 
 load_dotenv()
 EMAIL = os.getenv('EMAIL')
@@ -29,30 +28,33 @@ class TestGmail:
     @allure.story('Авторизация на gmail.com, '
                   'поиск сообщений и отправка сообщения.')
     @allure.severity('blocker')
-    def test_gmail(self, selenium):
+    def test_auth(self, selenium):
         """Авторизация на gmail.com, поиск сообщений и отправка сообщения."""
-        auth_page = AuthGmail(selenium, EMAIL, PASSWORD)
-        auth_page.load()
+        gmail_page = AuthHelper(selenium)
+        gmail_page.go_to_site()
         with allure.step('Делаем скриншот авторизации'):
             allure.attach(selenium.get_screenshot_as_png(),
                           name='screenshot_auth',
                           attachment_type=AttachmentType.PNG)
         assert selenium.title == 'Gmail', 'Страница gmail.com не загрузилась.'
-        auth_page.auth()
+        gmail_page.enter_email(EMAIL)
+        gmail_page.enter_password(PASSWORD)
+        gmail_page = FindHelper(selenium)
         with allure.step('Делаем скриншот главной страницы'):
             allure.attach(selenium.get_screenshot_as_png(),
                           name='screenshot_main_gmail',
                           attachment_type=AttachmentType.PNG)
-        assert EMAIL in selenium.title, 'Авторизация не выполнена.'
-        find_email = SearchGmail(selenium, TO_EMAIL)
-        unit = find_email.search_email()
+        assert EMAIL in gmail_page.title(), 'Авторизация не выполнена.'
+        gmail_page.search_email(TO_EMAIL)
+        emails = gmail_page.count_emails()
         with allure.step('Делаем скриншот найденых сообщений'):
             allure.attach(selenium.get_screenshot_as_png(),
                           name='screenshot_sind_messages',
                           attachment_type=AttachmentType.PNG)
-        assert isinstance(unit, int), 'Поиск сообщений не выполнен.'
-        send_email_page = SendEmailGmail(selenium, TO_EMAIL, TOPIC, unit)
-        send_email_page.send_email()
+        assert isinstance(emails, int), 'Поиск сообщений не выполнен.'
+        gmail_page = SendHelper(selenium)
+        gmail_page.write_button()
+        gmail_page.write_email(TO_EMAIL, TOPIC, emails)
         with allure.step('Делаем скриншот отправленных сообщений'):
             allure.attach(selenium.get_screenshot_as_png(),
                           name='screenshot_sind_messages',
